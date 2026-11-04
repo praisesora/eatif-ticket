@@ -597,14 +597,14 @@ html, body {
   position: relative;
   display: flex;
   flex-direction: column;
-  margin: 46px auto 0 auto; /* centered horizontally and leaves room for badge */
+  margin: 52px auto 16px auto; /* centered horizontally and leaves room for badge */
   overflow: visible;
 }
 
 /* Floating Circular Badge */
 .floating-badge-container {
   position: absolute;
-  top: -42px;
+  top: -46px;
   left: 0;
   right: 0;
   display: flex;
@@ -614,8 +614,8 @@ html, body {
 }
 
 .floating-badge {
-  width: 66px;
-  height: 66px;
+  width: 68px;
+  height: 68px;
   background: #FFFFFF;
   border-radius: 50%;
   display: flex;
@@ -632,8 +632,8 @@ html, body {
 }
 
 .badge-logo-img {
-  width: 50px;
-  height: 50px;
+  width: 52px;
+  height: 52px;
   object-fit: contain;
   display: block;
 }
@@ -652,7 +652,7 @@ html, body {
 
 /* Spacer matching protruding badge bottom so ticker is completely unblocked */
 .card-top-spacer {
-  height: 28px;
+  height: 30px;
   width: 100%;
 }
 
@@ -664,7 +664,7 @@ html, body {
   padding: 8px 0;
   white-space: nowrap;
   position: relative;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
 .ticker-track {
@@ -677,7 +677,7 @@ html, body {
 .ticker-item {
   display: inline-block;
   color: var(--text-ticker);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.15px;
 }
@@ -689,16 +689,16 @@ html, body {
 
 /* Organization Title */
 .org-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--color-title);
   letter-spacing: -0.1px;
-  margin: 0 16px 10px 16px;
+  margin: 0 16px 12px 16px;
 }
 
 /* Divider Line */
 .subtle-divider {
-  width: 60px;
+  width: 64px;
   height: 1px;
   background-color: var(--color-divider);
   margin: 0 auto 12px auto;
@@ -706,7 +706,7 @@ html, body {
 
 /* Purchase Date & Time */
 .purchased-date {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--color-muted);
   margin-bottom: 12px;
@@ -714,21 +714,21 @@ html, body {
 
 /* Big Ticket Headline (1 квиток) */
 .ticket-count-headline {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 800;
   color: var(--color-black);
   letter-spacing: -0.4px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 /* Status Pill (Active / Expired) */
 .status-pill-wrapper {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  min-height: 46px;
+  min-height: 48px;
 }
 
 .status-pill {
@@ -758,7 +758,7 @@ html, body {
 
 .status-pill.active-pill .pill-text {
   font-weight: 800;
-  font-size: 27px;
+  font-size: 28px;
   color: #000000;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.3px;
@@ -769,8 +769,8 @@ html, body {
 .status-pill.expired-pill {
   gap: 8px;
   min-width: 220px;
-  min-height: 46px;
-  padding: 9px 20px;
+  min-height: 48px;
+  padding: 10px 22px;
   border-radius: var(--radius-pill);
   background-color: var(--pill-expired-bg);
   color: var(--pill-expired-text);
@@ -796,17 +796,17 @@ html, body {
   align-items: baseline;
   justify-content: center;
   gap: 6px;
-  margin-bottom: 22px;
+  margin-bottom: 30px;
 }
 
 .vehicle-kind {
-  font-size: 16.5px;
+  font-size: 17.5px;
   font-weight: 400;
   color: #4B5563;
 }
 
 .vehicle-num-bold {
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 800;
   color: #000000;
   letter-spacing: -0.2px;
@@ -818,28 +818,28 @@ html, body {
 .ticket-tear-line {
   position: relative;
   width: 100%;
-  height: 28px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .notch {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background-color: var(--bg-page);
   position: absolute;
-  top: calc(50% - 12px);
+  top: calc(50% - 13px);
   z-index: 2;
 }
 
 .notch-left {
-  left: -12px;
+  left: -13px;
 }
 
 .notch-right {
-  right: -12px;
+  right: -13px;
 }
 
 .tear-dashed-line {
@@ -852,7 +852,7 @@ html, body {
    LOWER TICKET SECTION (QR & Number)
    ======================================================== */
 .ticket-lower {
-  padding: 26px 18px 18px 18px;
+  padding: 64px 20px 30px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -865,7 +865,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 30px auto;
+  margin: 0 auto 62px auto;
   position: relative;
 }
 
@@ -888,17 +888,17 @@ html, body {
   align-items: baseline;
   justify-content: center;
   gap: 6px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .ticket-number-label {
-  font-size: 15px;
+  font-size: 15.5px;
   font-weight: 400;
   color: var(--color-subtle);
 }
 
 .ticket-number-value {
-  font-size: 17px;
+  font-size: 17.5px;
   font-weight: 700;
   color: #1A1A1A;
   letter-spacing: 0.2px;
@@ -912,20 +912,21 @@ html, body {
 /* ========================================================
    RESPONSIVE FIT FOR ULTRA-COMPACT SCREENS
    ======================================================== */
-@media (max-height: 780px) {
+@media (max-height: 750px) {
   #ticketView {
     padding-top: 6px;
     padding-bottom: 8px;
   }
   .ticket-card {
-    margin-top: 40px;
+    margin-top: 42px;
+    margin-bottom: 8px;
   }
   .card-top-spacer {
-    height: 20px;
+    height: 22px;
   }
   .ticker-banner {
     padding: 6px 0;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
   .org-title {
     margin-bottom: 8px;
@@ -937,30 +938,27 @@ html, body {
     margin-bottom: 8px;
   }
   .ticket-count-headline {
-    font-size: 27px;
-    margin-bottom: 8px;
+    font-size: 28px;
+    margin-bottom: 10px;
   }
   .status-pill-wrapper {
-    margin-bottom: 10px;
-    min-height: 40px;
+    margin-bottom: 14px;
+    min-height: 42px;
   }
   .vehicle-info-row {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
   }
   .ticket-lower {
-    padding: 18px 16px 12px 16px;
+    padding: 34px 18px 20px 18px;
   }
   .qr-code-box {
     width: 175px;
     height: 175px;
-    margin-bottom: 20px;
-  }
-  .ticket-number-row {
-    margin-bottom: 12px;
+    margin-bottom: 34px;
   }
 }
 
-@media (max-height: 680px) {
+@media (max-height: 660px) {
   .ticket-card {
     margin-top: 36px;
   }
@@ -976,13 +974,13 @@ html, body {
     width: 44px;
     height: 44px;
   }
+  .ticket-lower {
+    padding: 20px 16px 14px 16px;
+  }
   .qr-code-box {
     width: 155px;
     height: 155px;
-    margin-bottom: 14px;
-  }
-  .ticket-lower {
-    padding: 12px 14px 10px 14px;
+    margin-bottom: 20px;
   }
 }
 
