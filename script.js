@@ -290,6 +290,15 @@ function updatePillState() {
 
   const isExpired = currentTicket.manualExpiredOverride === true || remainingSec <= 0;
 
+  const ticketCard = document.getElementById('ticketCard');
+  if (ticketCard) {
+    if (isExpired) {
+      ticketCard.classList.add('expired');
+    } else {
+      ticketCard.classList.remove('expired');
+    }
+  }
+
   if (isExpired) {
     // Expired State (1:1 identical to reference image with outline & smiley)
     pill.className = 'status-pill expired-pill';
@@ -387,11 +396,11 @@ function loadSavedTicket() {
   const hash = window.location.hash.toLowerCase();
   const search = window.location.search.toLowerCase();
 
-  if (hash === '#ticket' || search.includes('view=ticket')) {
+  if (hash.includes('ticket') || search.includes('ticket')) {
     switchView('ticket');
     return;
   }
-  if (hash === '#expired' || search.includes('view=expired')) {
+  if (hash.includes('expired') || search.includes('expired')) {
     if (!currentTicket) handleCreateTicket();
     currentTicket.manualExpiredOverride = true;
     updatePillState();
@@ -418,7 +427,9 @@ function switchView(viewName) {
       // If no ticket yet, create default ticket first
       handleCreateTicket();
     }
-    if (container) container.classList.add('ticket-mode');
+    if (container) {
+      container.classList.add('ticket-mode');
+    }
     createView.classList.remove('active');
     ticketView.classList.add('active');
     tabCreateBtn.classList.remove('active');
