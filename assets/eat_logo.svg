@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="13 1.5 224 224" width="224" height="224">
+  <!-- Subtitle: КОМУНАЛЬНЕ ПІДПРИЄМСТВО -->
+  <text x="149.5" y="96.5" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Montserrat', 'Segoe UI', Roboto, sans-serif" font-size="7.6" font-weight="700" fill="#888E8D" text-anchor="middle" letter-spacing="1.2">КОМУНАЛЬНЕ ПІДПРИЄМСТВО</text>
+  
+  <!-- Red slanted rounded pill -->
+  <line x1="49.5" y1="98" x2="33.5" y2="131" stroke="#E51A24" stroke-width="23" stroke-linecap="round"/>
+  
+  <!-- Dark slanted rounded pill -->
+  <line x1="67" y1="109.5" x2="58.5" y2="132.5" stroke="#2A3B3C" stroke-width="17" stroke-linecap="round"/>
+  
+  <!-- EAT stylized letters -->
+  <path d="M 127 101 H 97 A 9 9 0 0 0 88 110 V 132 A 9 9 0 0 0 97 141 H 127 V 136 H 94 V 123.5 H 127 V 118.5 H 94 V 106 H 127 Z M 136 141 V 110 A 9 9 0 0 1 145 101 H 172 A 9 9 0 0 1 181 110 V 141 H 175 V 123.5 H 142 V 141 Z M 142 118.5 H 175 V 110 A 4 4 0 0 0 171 106 H 146 A 4 4 0 0 0 142 110 Z M 185 101 H 230 V 106 H 210.5 V 141 H 204.5 V 106 H 185 Z" fill="#2A3B3C" fill-rule="evenodd"/>
+</svg>

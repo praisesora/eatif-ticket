@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>КП "ЕЛЕКТРОАВТОТРАНС" — Е-Квиток</title>
+  
+  <meta name="theme-color" content="#F4F4F4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ЕАТ Квиток">
+  
+  <link rel="icon" type="image/png" href="assets/eat_logo.png">
+  <link rel="apple-touch-icon" href="assets/eat_logo.png">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Wrapper (centered mobile screen on desktop, full screen on phone) -->
+  <div class="device-container" id="deviceContainer">
+    
+    <!-- Top Global Switcher Bar (Discreet, easy testing & navigation) -->
+    <header class="app-nav-bar" id="appNavBar">
+      <div class="nav-tabs">
+        <button type="button" class="nav-tab-btn active" id="tabCreateBtn" onclick="switchView('create')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Створити квиток
+        </button>
+        <button type="button" class="nav-tab-btn" id="tabTicketBtn" onclick="switchView('ticket')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          Переглянути квиток
+        </button>
+      </div>
+      <button type="button" class="fullscreen-btn" id="toggleFullscreenBtn" title="На весь екран" onclick="toggleFullscreen()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      </button>
+    </header>
+
+    <!-- VIEW 1: CREATION SCREEN (Начальный экран) -->
+    <main class="view-screen active" id="createView">
+      <div class="create-card">
+        
+        <div class="create-header">
+          <div class="brand-badge">
+            <img src="assets/eat_logo.svg" alt="ЕАТ" class="brand-logo-img">
+          </div>
+          <h1 class="create-title">Створення квитка</h1>
+          <p class="create-subtitle">КП "ЕЛЕКТРОАВТОТРАНС" • Івано-Франківськ</p>
+        </div>
+
+        <form id="ticketForm" onsubmit="handleCreateTicket(event)">
+          
+          <!-- Transport Type -->
+          <div class="form-group">
+            <label class="form-label">Вид транспорту</label>
+            <div class="transport-selector">
+              <label class="transport-option">
+                <input type="radio" name="transportType" value="Тролейбус" checked onchange="updateCreationPreview()">
+                <span class="transport-card">
+                  <span class="transport-icon">🚎</span>
+                  <span class="transport-name">Тролейбус</span>
+                </span>
+              </label>
+              <label class="transport-option">
+                <input type="radio" name="transportType" value="Автобус" onchange="updateCreationPreview()">
+                <span class="transport-card">
+                  <span class="transport-icon">🚌</span>
+                  <span class="transport-name">Автобус</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Vehicle Number (3-4 digits) -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="vehicleNumberInput" class="form-label">№ транспорту (3-4 цифри)</label>
+              <button type="button" class="btn-text-action" onclick="randomizeVehicleNumber()">🎲 Випадковий</button>
+            </div>
+            <div class="input-with-prefix">
+              <span class="input-prefix">№</span>
+              <input 
+                type="text" 
+                id="vehicleNumberInput" 
+                class="form-input text-bold" 
+                inputmode="numeric" 
+                pattern="[0-9]{3,4}" 
+                maxlength="4" 
+                required 
+                placeholder="257" 
+                value="257"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4); updateCreationPreview();"
+              >
+            </div>
+            <span class="form-hint">Вкажіть 3 або 4 цифри бортового номера (наприклад, 257 або 1042)</span>
+          </div>
+
+          <!-- Duration in minutes -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="durationInput" class="form-label">Час дії квитка (хвилин)</label>
+              <span class="badge-tag">Стандарт: 40 хв</span>
+            </div>
+            <div class="input-with-suffix">
+              <input 
+                type="number" 
+                id="durationInput" 
+                class="form-input" 
+                min="1" 
+                max="300" 
+                required 
+                value="40"
+                oninput="updateCreationPreview()"
+              >
+              <span class="input-suffix">хв</span>
+            </div>
+            
+            <!-- Quick Duration Chips -->
+            <div class="chips-row">
+              <button type="button" class="chip-btn" onclick="setDuration(15)">15 хв</button>
+              <button type="button" class="chip-btn" onclick="setDuration(30)">30 хв</button>
+              <button type="button" class="chip-btn active" id="chip40" onclick="setDuration(40)">40 хв (стандарт)</button>
+              <button type="button" class="chip-btn" onclick="setDuration(45)">45 хв</button>
+              <button type="button" class="chip-btn" onclick="setDuration(60)">60 хв</button>
+              <button type="button" class="chip-btn test-chip" onclick="setDurationSeconds(15)" title="Швидко перевірити закінчення часу">⚡ 15 сек (тест)</button>
+            </div>
+          </div>
+
+          <!-- Purchase Date & Time -->
+          <div class="form-group">
+            <label class="form-label">Дата та час придбання</label>
+            <div class="segmented-control">
+              <label class="segment-btn">
+                <input type="radio" name="dateMode" value="auto" checked onchange="toggleDateMode('auto')">
+                <span>⏰ Поточний час (авто)</span>
+              </label>
+              <label class="segment-btn">
+                <input type="radio" name="dateMode" value="manual" onchange="toggleDateMode('manual')">
+                <span>✏️ Вказати вручну</span>
+              </label>
+            </div>
+
+            <!-- Auto Date Live Preview -->
+            <div class="auto-date-preview" id="autoDatePreviewBox">
+              <span class="preview-dot"></span>
+              <span id="autoDatePreviewText">Придбано зараз...</span>
+            </div>
+
+            <!-- Manual Date Inputs -->
+            <div class="manual-date-box" id="manualDateBox" style="display: none;">
+              <div class="input-grid">
+                <div>
+                  <label for="manualDateInput" class="form-sublabel">Дата</label>
+                  <input type="date" id="manualDateInput" class="form-input" onchange="updateCreationPreview()">
+                </div>
+                <div>
+                  <label for="manualTimeInput" class="form-sublabel">Час</label>
+                  <input type="time" id="manualTimeInput" class="form-input" onchange="updateCreationPreview()">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Automatic Ticket Number (205000 - 206000) -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="ticketNumberInput" class="form-label">Номер билета (205000 - 206000)</label>
+              <button type="button" class="btn-text-action" onclick="randomizeTicketNumber()">🎲 Новий номер</button>
+            </div>
+            <div class="input-with-prefix">
+              <span class="input-prefix">№</span>
+              <input 
+                type="number" 
+                id="ticketNumberInput" 
+                class="form-input text-bold" 
+                min="205000" 
+                max="206000" 
+                required 
+                value="205158"
+                oninput="updateCreationPreview()"
+              >
+            </div>
+            <span class="form-hint" id="ticketNumberFormattedHint">Формат у квитку: Номер: 205 158</span>
+          </div>
+
+          <!-- Quantity of Tickets -->
+          <div class="form-group">
+            <label for="ticketCountInput" class="form-label">Кількість квитків</label>
+            <div class="counter-box">
+              <button type="button" class="counter-btn" onclick="adjustCount(-1)">−</button>
+              <span class="counter-value" id="ticketCountDisplay">1 квиток</span>
+              <button type="button" class="counter-btn" onclick="adjustCount(1)">+</button>
+            </div>
+          </div>
+
+          <!-- Ticker Quote -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="tickerTextInput" class="form-label">Текст біжучого рядка</label>
+              <button type="button" class="btn-text-action" onclick="resetTickerQuote()">Скинути</button>
+            </div>
+            <input 
+              type="text" 
+              id="tickerTextInput" 
+              class="form-input" 
+              value="Найголовніше — залишайтеся людьми і кричіть, що ви живі!"
+            >
+          </div>
+
+          <!-- Submit CTA -->
+          <button type="submit" class="btn-primary-action">
+            <span>Створити квиток</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+
+        </form>
+
+      </div>
+    </main>
+
+    <!-- VIEW 2: TICKET SCREEN (Идентичная копия сайта / квитка) -->
+    <main class="view-screen" id="ticketView">
+      
+      <!-- Top info circle icon -->
+      <button type="button" class="ticket-info-btn" id="ticketInfoBtn" onclick="openInfoModal()" aria-label="Деталі квитка">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10.5" stroke="#A7A7A7" stroke-width="1.6"/>
+          <line x1="12" y1="11" x2="12" y2="17" stroke="#A7A7A7" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="7.5" r="1.2" fill="#A7A7A7"/>
+        </svg>
+      </button>
+
+      <!-- Main White Ticket Card -->
+      <article class="ticket-card" id="ticketCard">
+        
+        <!-- Centered Circular Logo Badge -->
+        <div class="floating-badge-container">
+          <div class="floating-badge" onclick="switchView('create')" title="Натисніть для переходу до налаштувань">
+            <img src="assets/eat_logo.svg" alt="ЕАТ" class="badge-logo-img">
+          </div>
+        </div>
+
+        <!-- Upper Ticket Section -->
+        <div class="ticket-upper">
+          <!-- Spacer matching badge protrusion height so badge does not cover ticker -->
+          <div class="card-top-spacer"></div>
+          
+          <!-- Running Marquee Banner -->
+          <div class="ticker-banner" id="tickerBanner">
+            <div class="ticker-track">
+              <span class="ticker-item" id="tickerContent1">Найголовніше — залишайтеся людьми і кричіть, що ви живі! &nbsp;—&nbsp;&nbsp;</span>
+              <span class="ticker-item" id="tickerContent2">Найголовніше — залишайтеся людьми і кричіть, що ви живі! &nbsp;—&nbsp;&nbsp;</span>
+              <span class="ticker-item" id="tickerContent3">Найголовніше — залишайтеся людьми і кричіть, що ви живі! &nbsp;—&nbsp;&nbsp;</span>
+              <span class="ticker-item" id="tickerContent4">Найголовніше — залишайтеся людьми і кричіть, що ви живі! &nbsp;—&nbsp;&nbsp;</span>
+              <span class="ticker-item" id="tickerContent5">Найголовніше — залишайтеся людьми і кричіть, що ви живі! &nbsp;—&nbsp;&nbsp;</span>
+              <span class="ticker-item" id="tickerContent6">Найголовніше — залишайтеся людьми і кричіть, що ви живі! &nbsp;—&nbsp;&nbsp;</span>
+            </div>
+          </div>
+
+          <!-- Enterprise Title -->
+          <h2 class="org-title">КП "ЕЛЕКТРОАВТОТРАНС"</h2>
+          
+          <!-- Subtle Centered Divider -->
+          <div class="subtle-divider"></div>
+
+          <!-- Purchase Date & Time -->
+          <p class="purchased-date" id="ticketPurchasedDate">Придбано 3 листопада о 17:04</p>
+
+          <!-- Ticket Quantity -->
+          <h1 class="ticket-count-headline" id="ticketCountHeadline">1 квиток</h1>
+
+          <!-- Status Pill (Active Countdown or Expired) -->
+          <div class="status-pill-wrapper">
+            <div class="status-pill active-pill" id="statusPill" onclick="toggleExpireStateManual()" title="Натисніть для перемикання стану">
+              <span class="pill-icon" id="pillIcon" style="display: none;"></span>
+              <span class="pill-text" id="pillText">39:59</span>
+            </div>
+          </div>
+
+          <!-- Vehicle Information -->
+          <div class="vehicle-info-row">
+            <span class="vehicle-kind" id="vehicleKindText">Тролейбус</span>
+            <span class="vehicle-num-bold" id="vehicleNumText">№ 257</span>
+          </div>
+
+        </div>
+
+        <!-- Perforated Tear Line with Semicircle Notches -->
+        <div class="ticket-tear-line">
+          <div class="notch notch-left"></div>
+          <div class="tear-dashed-line"></div>
+          <div class="notch notch-right"></div>
+        </div>
+
+        <!-- Lower Ticket Section (QR code & Number) -->
+        <div class="ticket-lower">
+          
+          <!-- QR Code Container with Cat Silhouette in Center -->
+          <div class="qr-code-box">
+            <img src="assets/qr_code.png" alt="QR-код квитка" class="qr-image" id="qrImage">
+          </div>
+
+          <!-- Ticket Number -->
+          <div class="ticket-number-row">
+            <span class="ticket-number-label">Номер:</span>
+            <span class="ticket-number-value" id="ticketNumberDisplay">205 158</span>
+          </div>
+
+        </div>
+
+      </article>
+
+      <!-- Android / iOS Home Indicator -->
+      <div class="home-indicator-bar"></div>
+
+    </main>
+
+  </div>
+
+  <!-- Info Modal (opens when clicking the (i) icon) -->
+  <div class="modal-backdrop" id="infoModal" onclick="closeInfoModal(event)">
+    <div class="modal-dialog" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      
+      <div class="modal-header">
+        <h3 class="modal-title">Деталі квитка</h3>
+        <button type="button" class="modal-close-btn" onclick="closeInfoModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="info-item">
+          <span class="info-item-label">Перевізник:</span>
+          <span class="info-item-val">КП "ЕЛЕКТРОАВТОТРАНС"</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Місто:</span>
+          <span class="info-item-val">Івано-Франківськ</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Транспортний засіб:</span>
+          <span class="info-item-val" id="modalTransportVal">Тролейбус № 257</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Статус:</span>
+          <span class="info-item-val" id="modalStatusVal">Дійсний</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Час дії:</span>
+          <span class="info-item-val" id="modalDurationVal">40 хвилин</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Номер квитка:</span>
+          <span class="info-item-val" id="modalNumberVal">205 158</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Банк-еквайр:</span>
+          <span class="info-item-val">monobank (АТ "УНІВЕРСАЛ БАНК")</span>
+        </div>
+
+        <div class="modal-actions-list">
+          <button type="button" class="modal-action-btn primary" onclick="closeInfoModal(); switchView('create');">
+            ✏️ Редагувати або створити новий квиток
+          </button>
+          <button type="button" class="modal-action-btn secondary" onclick="closeInfoModal(); restartTicketTimer();">
+            🔄 Перезапустити таймер спочатку
+          </button>
+          <button type="button" class="modal-action-btn secondary" onclick="closeInfoModal(); toggleExpireStateManual();">
+            ⚠️ Змінити стан: дійсний / недійсний
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

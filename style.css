@@ -1,0 +1,1040 @@
+/* ========================================================
+   КП "ЕЛЕКТРОАВТОТРАНС" — E-TICKET STYLES
+   Pixel-perfect replica & Setup generator
+   ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800&display=swap');
+
+:root {
+  --bg-page: #F4F4F4;
+  --bg-card: #FFFFFF;
+  --bg-ticker: #EEEEF9;
+  --text-ticker: #4854A2;
+  --color-black: #000000;
+  --color-title: #020202;
+  --color-muted: #656565;
+  --color-subtle: #737373;
+  --color-divider: #E0E0E0;
+  
+  /* Expired Pill (from reference screenshot) */
+  --pill-expired-bg: #FBE4EA;
+  --pill-expired-text: #262626;
+  
+  /* Active Pill (timer ticking down) */
+  --pill-active-bg: #E6F7EB;
+  --pill-active-text: #0D5C2E;
+  
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  
+  --radius-card: 26px;
+  --radius-pill: 9999px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-page);
+  color: var(--color-black);
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ========================================================
+   DEVICE CONTAINER (Centered phone mockup or full screen)
+   ======================================================== */
+.device-container {
+  width: 100%;
+  max-width: 440px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: var(--bg-page);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 440px) {
+  .device-container {
+    box-shadow: none;
+    max-width: 100%;
+  }
+}
+
+/* ========================================================
+   GLOBAL TOP SWITCHER BAR
+   ======================================================== */
+.app-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(244, 244, 244, 0.95);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* When in Ticket Mode, hide the top navbar so it is a 100% exact replica */
+.device-container.ticket-mode .app-nav-bar {
+  display: none;
+}
+
+.nav-tabs {
+  display: flex;
+  background: #E5E7EB;
+  padding: 3px;
+  border-radius: 12px;
+  gap: 2px;
+}
+
+.nav-tab-btn {
+  border: none;
+  background: transparent;
+  padding: 7px 14px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4B5563;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+}
+
+.nav-tab-btn.active {
+  background: #FFFFFF;
+  color: #111827;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.fullscreen-btn {
+  background: #E5E7EB;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4B5563;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.fullscreen-btn:hover {
+  background: #D1D5DB;
+}
+
+/* ========================================================
+   VIEW SWITCHING
+   ======================================================== */
+.view-screen {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+}
+
+.view-screen.active {
+  display: flex;
+}
+
+/* ========================================================
+   VIEW 1: CREATION SCREEN (Начальный экран)
+   ======================================================== */
+#createView {
+  padding: 18px 18px 40px 18px;
+}
+
+.create-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.create-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.brand-badge {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 12px auto;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.brand-logo-img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+}
+
+.create-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.create-subtitle {
+  font-size: 13px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+/* Form Elements */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.label-row .form-label {
+  margin-bottom: 0;
+}
+
+.btn-text-action {
+  background: none;
+  border: none;
+  color: #E31E24;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.btn-text-action:hover {
+  background: #FEE2E2;
+}
+
+.badge-tag {
+  font-size: 11.5px;
+  background: #F3F4F6;
+  color: #6B7280;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Transport Selector */
+.transport-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.transport-option {
+  cursor: pointer;
+}
+
+.transport-option input[type="radio"] {
+  display: none;
+}
+
+.transport-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #F9FAFB;
+  border: 2px solid #E5E7EB;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #4B5563;
+  transition: all 0.18s ease;
+}
+
+.transport-option input[type="radio"]:checked + .transport-card {
+  border-color: #111827;
+  background: #111827;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.15);
+}
+
+.transport-icon {
+  font-size: 18px;
+}
+
+/* Form Inputs */
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: #F9FAFB;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #111827;
+  font-family: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #111827;
+  background: #FFFFFF;
+}
+
+.form-input.text-bold {
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+}
+
+.input-with-prefix, .input-with-suffix {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-prefix {
+  position: absolute;
+  left: 14px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #9CA3AF;
+  pointer-events: none;
+}
+
+.input-with-prefix .form-input {
+  padding-left: 38px;
+}
+
+.input-suffix {
+  position: absolute;
+  right: 14px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #9CA3AF;
+  pointer-events: none;
+}
+
+.form-hint {
+  display: block;
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 6px;
+}
+
+/* Quick Chips */
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.chip-btn {
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #4B5563;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chip-btn:hover {
+  background: #E5E7EB;
+}
+
+.chip-btn.active {
+  background: #111827;
+  border-color: #111827;
+  color: #FFFFFF;
+}
+
+.chip-btn.test-chip {
+  background: #FEF3C7;
+  border-color: #FCD34D;
+  color: #92400E;
+  font-weight: 600;
+}
+
+.chip-btn.test-chip:hover {
+  background: #FDE68A;
+}
+
+/* Segmented Control for Date */
+.segmented-control {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #F3F4F6;
+  padding: 3px;
+  border-radius: 12px;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+
+.segment-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.segment-btn input {
+  display: none;
+}
+
+.segment-btn span {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #4B5563;
+  transition: all 0.15s ease;
+}
+
+.segment-btn input:checked + span {
+  background: #FFFFFF;
+  color: #111827;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.auto-date-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #065F46;
+}
+
+.preview-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  animation: pulseDot 1.5s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.manual-date-box {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-sublabel {
+  display: block;
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+/* Counter Box */
+.counter-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F9FAFB;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 4px 6px;
+}
+
+.counter-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: #FFFFFF;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.counter-btn:active {
+  background: #E5E7EB;
+}
+
+.counter-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* CTA Button */
+.btn-primary-action {
+  width: 100%;
+  margin-top: 26px;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 16px;
+  background: #111827;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 14px rgba(17, 24, 39, 0.25);
+  transition: all 0.18s ease;
+}
+
+.btn-primary-action:hover {
+  background: #000000;
+  transform: translateY(-1px);
+}
+
+.btn-primary-action:active {
+  transform: translateY(0);
+}
+
+/* ========================================================
+   VIEW 2: TICKET SCREEN (Exact pixel-perfect replica)
+   ======================================================== */
+#ticketView {
+  padding-top: 18px;
+  padding-bottom: 16px;
+  align-items: center;
+  position: relative;
+  background-color: var(--bg-page);
+  min-height: 100vh;
+  justify-content: flex-start;
+}
+
+/* Top Right Info Button (Discreet native (i) button) */
+.ticket-info-btn {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  opacity: 0.85;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.ticket-info-btn:hover {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+/* Main Ticket Card */
+.ticket-card {
+  width: calc(100% - 36px);
+  max-width: 420px;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 74px auto 0 auto; /* centered horizontally and leaves room for badge */
+  overflow: visible;
+}
+
+/* Floating Circular Badge */
+.floating-badge-container {
+  position: absolute;
+  top: -68px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.floating-badge {
+  width: 88px;
+  height: 88px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 11px var(--bg-page);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.15s ease;
+}
+
+.floating-badge:hover {
+  transform: scale(1.03);
+}
+
+.badge-logo-img {
+  width: 86px;
+  height: 86px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Upper Ticket Section */
+.ticket-upper {
+  border-top-left-radius: var(--radius-card);
+  border-top-right-radius: var(--radius-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+/* Spacer matching protruding badge bottom so ticker is completely unblocked */
+.card-top-spacer {
+  height: 38px;
+  width: 100%;
+}
+
+/* Running Marquee Banner */
+.ticker-banner {
+  width: 100%;
+  background-color: var(--bg-ticker);
+  overflow: hidden;
+  padding: 12px 0;
+  white-space: nowrap;
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.ticker-track {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+}
+
+.ticker-item {
+  display: inline-block;
+  color: var(--text-ticker);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.15px;
+}
+
+@keyframes marquee {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+/* Organization Title */
+.org-title {
+  font-size: 17.5px;
+  font-weight: 700;
+  color: var(--color-title);
+  letter-spacing: -0.1px;
+  margin: 0 16px 14px 16px;
+}
+
+/* Divider Line */
+.subtle-divider {
+  width: 72px;
+  height: 1px;
+  background-color: var(--color-divider);
+  margin: 0 auto 16px auto;
+}
+
+/* Purchase Date & Time */
+.purchased-date {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-muted);
+  margin-bottom: 14px;
+}
+
+/* Big Ticket Headline (1 квиток) */
+.ticket-count-headline {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--color-black);
+  letter-spacing: -0.5px;
+  margin-bottom: 14px;
+}
+
+/* Status Pill (Active / Expired) */
+.status-pill-wrapper {
+  margin-bottom: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 52px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active Timer: No outline / pill badge, no icon, black text slightly smaller than "1 квиток" */
+.status-pill.active-pill {
+  background: transparent;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  min-width: unset;
+  min-height: unset;
+  padding: 4px 16px;
+  box-shadow: none;
+}
+
+.status-pill.active-pill .pill-icon {
+  display: none !important;
+}
+
+.status-pill.active-pill .pill-text {
+  font-weight: 800;
+  font-size: 30px;
+  color: #000000;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+}
+
+/* Expired Pill (Matches reference screenshot with outline & smiley) */
+.status-pill.expired-pill {
+  gap: 10px;
+  min-width: 240px;
+  min-height: 52px;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  background-color: var(--pill-expired-bg);
+  color: var(--pill-expired-text);
+  font-weight: 500;
+}
+
+.status-pill.expired-pill .pill-icon {
+  display: inline-block;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.status-pill.expired-pill .pill-text {
+  font-size: 17.5px;
+  font-weight: 500;
+  color: var(--pill-expired-text);
+  letter-spacing: -0.1px;
+}
+
+/* Vehicle Row */
+.vehicle-info-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 30px;
+}
+
+.vehicle-kind {
+  font-size: 19px;
+  font-weight: 400;
+  color: #4B5563;
+}
+
+.vehicle-num-bold {
+  font-size: 22px;
+  font-weight: 800;
+  color: #000000;
+  letter-spacing: -0.2px;
+}
+
+/* ========================================================
+   PERFORATED TEAR LINE & NOTCHES
+   ======================================================== */
+.ticket-tear-line {
+  position: relative;
+  width: 100%;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: var(--bg-page);
+  position: absolute;
+  top: calc(50% - 17px);
+  z-index: 2;
+}
+
+.notch-left {
+  left: -17px;
+}
+
+.notch-right {
+  right: -17px;
+}
+
+.tear-dashed-line {
+  width: 100%;
+  border-top: 2px dashed #D6DADE;
+  margin: 0 18px;
+}
+
+/* ========================================================
+   LOWER TICKET SECTION (QR & Number)
+   ======================================================== */
+.ticket-lower {
+  padding: 34px 20px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.qr-code-box {
+  width: 245px;
+  height: 245px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 46px auto;
+  position: relative;
+}
+
+.qr-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Bottom Ticket Number Row */
+.ticket-number-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.ticket-number-label {
+  font-size: 16.5px;
+  font-weight: 400;
+  color: var(--color-subtle);
+}
+
+.ticket-number-value {
+  font-size: 18.5px;
+  font-weight: 700;
+  color: #1A1A1A;
+  letter-spacing: 0.2px;
+}
+
+/* ========================================================
+   HOME INDICATOR BAR (Android / iOS Pill)
+   ======================================================== */
+.home-indicator-bar {
+  width: 136px;
+  height: 4.5px;
+  background-color: #333333;
+  border-radius: 3px;
+  margin: 0 auto 14px auto;
+  opacity: 0.85;
+}
+
+/* ========================================================
+   INFO MODAL (TICKET DETAILS BOTTOM SHEET)
+   ======================================================== */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-backdrop.open {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-dialog {
+  width: 100%;
+  max-width: 440px;
+  background: #FFFFFF;
+  border-radius: 24px 24px 0 0;
+  padding: 16px 20px 32px 20px;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal-handle {
+  width: 40px;
+  height: 4px;
+  background: #E5E7EB;
+  border-radius: 2px;
+  margin: 0 auto 14px auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.modal-close-btn {
+  background: #F3F4F6;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 20px;
+  color: #6B7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #F3F4F6;
+  font-size: 14px;
+}
+
+.info-item-label {
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.info-item-val {
+  color: #111827;
+  font-weight: 600;
+  text-align: right;
+}
+
+.modal-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.modal-action-btn {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.modal-action-btn.primary {
+  background: #111827;
+  color: #FFFFFF;
+}
+
+.modal-action-btn.secondary {
+  background: #F3F4F6;
+  color: #374151;
+}
+
+.modal-action-btn:hover {
+  opacity: 0.92;
+}

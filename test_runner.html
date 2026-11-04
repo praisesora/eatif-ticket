@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Automated Test Suite — EAT Ticket Replica</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    #log { font-family: monospace; white-space: pre-wrap; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-top: 15px; }
+    .pass { color: #16a34a; font-weight: bold; }
+    .fail { color: #dc2626; font-weight: bold; }
+    iframe { width: 440px; height: 600px; border: 1px solid #ccc; display: block; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>🧪 Automated Test Runner — EAT Ticket Replica</h2>
+  <div id="status">Запуск тестів...</div>
+  <div id="log"></div>
+  <iframe id="testFrame" src="index.html"></iframe>
+
+  <script>
+    const logEl = document.getElementById('log');
+    const statusEl = document.getElementById('status');
+    const frame = document.getElementById('testFrame');
+
+    const testResults = {
+      passed: 0,
+      failed: 0,
+      errors: []
+    };
+
+    function log(msg, type = 'info') {
+      const line = document.createElement('div');
+      line.textContent = msg;
+      if (type === 'pass') line.className = 'pass';
+      if (type === 'fail') line.className = 'fail';
+      logEl.appendChild(line);
+      console.log(msg);
+    }
+
+    window.onerror = function(msg, url, line) {
+      log(`ERROR: ${msg} at line ${line}`, 'fail');
+    };
+
+    function assert(condition, message) {
+      if (condition) {
+        testResults.passed++;
+        log('✓ PASS: ' + message, 'pass');
+      } else {
+        testResults.failed++;
+        testResults.errors.push(message);
+        log('✗ FAIL: ' + message, 'fail');
+      }
+    }
+
+    frame.onload = async () => {
+      try {
+        const win = frame.contentWindow;
+        const doc = frame.contentDocument;
+
+        log('Frame loaded. Running tests...');
+
+      // 1. Random ticket number range test
+      for (let i = 0; i < 50; i++) {
+        win.randomizeTicketNumber();
+        const val = parseInt(doc.getElementById('ticketNumberInput').value, 10);
+        assert(val >= 205000 && val <= 206000, `Random ticket number ${val} in range [205000, 206000]`);
+      }
+
+      // 2. formatTicketNumber test
+      assert(win.formatTicketNumber(205158) === '205 158', 'formatTicketNumber(205158) produces "205 158"');
+      assert(win.formatTicketNumber('205999') === '205 999', 'formatTicketNumber("205999") produces "205 999"');
+
+      // 3. formatUkrainianDate test
+      const testDateNov = new Date(2026, 10, 3, 17, 4);
+      assert(win.formatUkrainianDate(testDateNov) === 'Придбано 3 листопада о 17:04', 'formatUkrainianDate matches "Придбано 3 листопада о 17:04"');
+
+      const testDateJan = new Date(2026, 0, 15, 9, 5);
+      assert(win.formatUkrainianDate(testDateJan) === 'Придбано 15 січня о 09:05', 'formatUkrainianDate handles leading zero hours and minutes');
+
+      // 4. formatCountdown test
+      assert(win.formatCountdown(2400) === '40:00', '2400s -> "40:00"');
+      assert(win.formatCountdown(2399) === '39:59', '2399s -> "39:59"');
+      assert(win.formatCountdown(5) === '00:05', '5s -> "00:05"');
+      assert(win.formatCountdown(0) === '00:00', '0s -> "00:00"');
+
+      // 5. Test Trolleybus creation
+      doc.querySelector('input[name="transportType"][value="Тролейбус"]').checked = true;
+      doc.getElementById('vehicleNumberInput').value = '257';
+      doc.getElementById('durationInput').value = '40';
+      doc.getElementById('ticketNumberInput').value = '205158';
+      win.handleCreateTicket();
+
+      assert(doc.getElementById('ticketView').classList.contains('active'), 'Switched to ticket view after creation');
+      assert(doc.getElementById('vehicleKindText').textContent === 'Тролейбус', 'Transport kind text is "Тролейбус"');
+      assert(doc.getElementById('vehicleNumText').textContent === '№ 257', 'Vehicle number is "№ 257"');
+      assert(doc.getElementById('ticketNumberDisplay').textContent === '205 158', 'Ticket number display is "205 158"');
+
+      // 6. Test Active Pill State (timer ticking)
+      const pill = doc.getElementById('statusPill');
+      const pillText = doc.getElementById('pillText');
+      assert(pill.classList.contains('active-pill'), 'Status pill has class "active-pill"');
+      assert(!pill.classList.contains('expired-pill'), 'Status pill does not have class "expired-pill"');
+      assert(pillText.textContent.includes(':'), 'Pill text shows countdown time: ' + pillText.textContent);
+
+      // 7. Test Expired Pill Toggle
+      win.toggleExpireStateManual();
+      assert(pill.classList.contains('expired-pill'), 'After toggle, pill has "expired-pill" class');
+      assert(pillText.textContent === 'Квиток недійсний', 'Pill text shows "Квиток недійсний"');
+      assert(doc.getElementById('pillIcon').textContent === '😐', 'Pill icon shows 😐');
+
+      // 8. Test Toggle Back to Active
+      win.toggleExpireStateManual();
+      assert(pill.classList.contains('active-pill'), 'After toggle back, pill has "active-pill" class');
+
+      // 9. Test Bus creation with 4-digit number
+      win.switchView('create');
+      assert(doc.getElementById('createView').classList.contains('active'), 'Switched back to create view');
+      doc.querySelector('input[name="transportType"][value="Автобус"]').checked = true;
+      doc.getElementById('vehicleNumberInput').value = '1042';
+      doc.getElementById('durationInput').value = '45';
+      doc.getElementById('ticketNumberInput').value = '205890';
+      win.handleCreateTicket();
+
+      assert(doc.getElementById('vehicleKindText').textContent === 'Автобус', 'Transport kind text is "Автобус"');
+      assert(doc.getElementById('vehicleNumText').textContent === '№ 1042', 'Vehicle number is "№ 1042"');
+      assert(doc.getElementById('ticketNumberDisplay').textContent === '205 890', 'Ticket number is "205 890"');
+
+      // 10. Test Automatic Expiry on Timeout
+      win.currentTicket.expiresAt = Date.now() - 500; // expired half a second ago
+      win.updatePillState();
+      assert(pill.classList.contains('expired-pill'), 'Pill automatically becomes expired when expiresAt < now');
+      assert(pillText.textContent === 'Квиток недійсний', 'Pill text automatically becomes "Квиток недійсний"');
+
+      // 11. Test Info Modal opening and closing
+      win.openInfoModal();
+      assert(doc.getElementById('infoModal').classList.contains('open'), 'Info modal opens when openInfoModal() called');
+      win.closeInfoModal();
+      assert(!doc.getElementById('infoModal').classList.contains('open'), 'Info modal closes when closeInfoModal() called');
+
+      // Final status
+      window.__TEST_RESULTS__ = testResults;
+      if (testResults.failed === 0) {
+        statusEl.innerHTML = `<span style="color: green; font-weight: bold; font-size: 18px;">✅ ВСІ ТЕСТИ ПРОЙДЕНО УСПІШНО! (Всього тестів: ${testResults.passed})</span>`;
+      } else {
+        statusEl.innerHTML = `<span style="color: red; font-weight: bold; font-size: 18px;">❌ ПОМИЛКИ В ТЕСТАХ: ${testResults.failed} з ${testResults.passed + testResults.failed}</span>`;
+      }
+
+      fetch('/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(testResults)
+      }).catch(() => {});
+
+      } catch (err) {
+        log('CAUGHT EXCEPTION: ' + (err.stack || err.message), 'fail');
+        fetch('/report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passed: testResults.passed, failed: testResults.failed + 1, error: err.message, stack: err.stack })
+        }).catch(() => {});
+      }
+    };
+  </script>
+</body>
+</html>
